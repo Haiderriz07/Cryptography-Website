@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <title>XOR Cipher Example</title>
+  <script>
+    // Function to perform XOR encryption/decryption
+    function xorCipher(message, key) {
+      let result = '';
+      for (let i = 0; i < message.length; i++) {
+      	// complete the following line to encrypt
+        let charCode = message.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+        result += String.fromCharCode(charCode);
+      }
+      return result;
+    }
+
+    // Function to encrypt the message
+    function encryptMessage() {
+      const message = document.getElementById('message').value;
+      const key = document.getElementById('key').value;
+      const encryptedMessage = xorCipher(message, key);
+      document.getElementById('result').innerHTML = 'Encrypted Message: ' + encryptedMessage;
+    }
+
+    // Function to decrypt the message
+    function decryptMessage() {
+      const message = document.getElementById('message').value;
+      const key = document.getElementById('key').value;
+      const decryptedMessage = xorCipher(message, key);
+      document.getElementById('result').innerHTML = 'Decrypted Message: ' + decryptedMessage;
+    }
+  </script>
+</head>
+<body>
+<h1>XOR Cipher Example</h1>
+<label for="message">Message:</label>
+<input type="text" id="message"><br><br>
+<label for="key">Numeric Key:</label>
+<p>Add secret key like: '49283765'</p>
+<input type="text" id="key"><br><br>
+<button onclick="encryptMessage()">Encrypt</button>
+<button onclick="decryptMessage()">Decrypt</button>
+<p id="result"></p>
+</body>
+</html>

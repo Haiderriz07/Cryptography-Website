@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Time Complexity Example</title>
+  <!-- Add Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Linear Time Complexity Example</h1>
+  <p style="color: rgb(0, 11, 163);">Linear time complexity: 45</p>
+  <p style="color: red; font-weight: bold;">Or open Console browser on Google Chrome or Firefox to see the result.</p>
+  
+  <!-- Add canvas element for the graph -->
+  <canvas id="myChart" width="400" height="400"></canvas>
+  
+  <script>
+    function linearTime(n) {
+      let total = 0;
+      let data = []; // Array to store data for the graph
+      for (let i = 0; i < n; i++) {
+        total += i;
+        data.push(total); // Push the accumulated total to the data array
+      }
+      return data;
+    }
+    
+    // Example usage
+    const n = 10;
+    const result = linearTime(n);
+    console.log("Linear time complexity:", result);
+    
+    // Drawing the graph
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: Array.from(Array(n).keys()), // Create labels from 0 to n-1
+        datasets: [{
+          label: 'Linear Time Complexity',
+          data: result, // Use the result data for the graph
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

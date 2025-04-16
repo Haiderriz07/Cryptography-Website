@@ -1,0 +1,105 @@
+<!--One Time Pad W13-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character encoding and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the page -->
+    <title>One-Time Pad Encryption</title>
+    <!-- Link to an external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<!-- Internal CSS styles -->
+<style>
+    /* Styling for the body */
+    body {
+        font-family: Arial, sans-serif;
+    }
+    /* Styling for the heading */
+    h1 {
+        color: white;
+        font-weight: bold;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 32px;
+    }
+    /* Styling for buttons on hover */
+    button:hover {
+        color: rgb(0, 0, 0); /* Change color on hover */
+        background-color: rgb(255, 10, 10); /* Example background color change */
+    }
+    /* Styling for labels and buttons */
+    label, button {
+        color: rgb(255, 255, 32);
+        font-weight: bold;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 24px;
+    }
+    /* Styling for the result */
+    #result {
+        color: rgb(118, 255, 19);
+        font-weight: bold;
+        font-size: 28px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+</style>
+<body>
+    <!-- Heading -->
+    <h1>One-Time Pad Encryption</h1>
+    <!-- Textarea for entering plaintext -->
+    <label for="plaintext">Enter plaintext:</label><br>
+    <textarea id="plaintext" rows="4" cols="50"></textarea><br>
+    <!-- Button to trigger encryption -->
+    <button onclick="encrypt()">Encrypt</button><br>
+    <!-- Textarea for displaying the generated key -->
+    <label for="key">One-Time Pad Key:</label><br>
+    <textarea id="key" rows="4" cols="50" readonly></textarea><br>
+    <!-- Textarea for displaying the ciphertext -->
+    <label for="ciphertext">Ciphertext:</label><br>
+    <textarea id="ciphertext" rows="4" cols="50" readonly></textarea><br>
+
+    <script>
+        // Function to generate a one-time pad key
+        function generateOneTimePad(length) {
+            let key = "";
+            for (let i = 0; i < length; i++) {
+                key += String.fromCharCode(Math.floor(Math.random() * 26) + 65); // Generates a random uppercase letter
+            }
+            return key;
+        }
+
+        // Function to perform one-time pad encryption
+        function oneTimePadEncrypt(plaintext, key) {
+            if (plaintext.length !== key.length) {
+                throw new Error("Plaintext and key must be of the same length.");
+            }
+
+            let result = "";
+            for (let i = 0; i < plaintext.length; i++) {
+                let char = plaintext[i];
+
+                if (char.match(/[a-zA-Z]/)) { // Checks if the character is an alphabet
+                    let isUpperCase = char === char.toUpperCase(); // Checks if the character is uppercase
+                    let offset = isUpperCase ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0); // Calculates the offset based on case
+                    let shiftedChar = String.fromCharCode((char.charCodeAt(0) - offset + key.charCodeAt(i) - 'A'.charCodeAt(0)) % 26 + offset); // Encrypts the character
+                    result += shiftedChar;
+                } else {
+                    result += char; // Leaves non-alphabetic characters unchanged
+                }
+            }
+
+            return result;
+        }
+
+        // Function to handle encryption process
+        function encrypt() {
+            let plaintext = document.getElementById("plaintext").value; // Retrieves plaintext from textarea
+            let otpKey = generateOneTimePad(plaintext.length); // Generates a one-time pad key
+            let ciphertext = oneTimePadEncrypt(plaintext, otpKey); // Encrypts the plaintext
+
+            document.getElementById("key").value = otpKey; // Displays the generated key
+            document.getElementById("ciphertext").value = ciphertext; // Displays the ciphertext
+        }
+    </script>
+</body>
+</html>

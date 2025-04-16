@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>RC4 Encryption</title>
+</head>
+<body>
+    <h1>RC4 Encryption</h1>
+    <label for="key">Enter Key:</label>
+    <input type="text" id="key"><br><br>
+    <label for="message">Enter Message:</label><br>
+    <textarea id="message" rows="5" cols="50"></textarea><br><br>
+    <button onclick="encrypt()">Encrypt</button><br><br>
+    <label for="encryptedMessage">Encrypted Message:</label><br>
+    <textarea id="encryptedMessage" rows="5" cols="50" readonly></textarea><br><br>
+    <button onclick="decrypt()">Decrypt</button><br><br>
+    <label for="decryptedMessage">Decrypted Message:</label><br>
+    <textarea id="decryptedMessage" rows="5" cols="50" readonly></textarea><br><br>
+
+    <script>
+        function rc4(key, message) {
+            // Key-scheduling algorithm (KSA)
+            var S = [];
+            for (var i = 0; i < 256; i++) {
+                S[i] = i;
+            }
+            
+            var j = 0;
+            for (var i = 0; i < 256; i++) {
+                j = (j + S[i] + key.charCodeAt(i % key.length)) % 256;
+                // Swap S[i] and S[j]
+                var temp = S[i];
+                S[i] = S[j];
+                S[j] = temp;
+            }
+
+            // Pseudo-random generation algorithm (PRGA)
+            var i = 0, j = 0;
+            var result = '';
+            for (var k = 0; k < message.length; k++) {
+                i = (i + 1) % 256;
+                j = (j + S[i]) % 256;
+                // Swap S[i] and S[j]
+                var temp = S[i];
+                S[i] = S[j];
+                S[j] = temp;
+
+                var keystream = S[(S[i] + S[j]) % 256];
+                var encryptedChar = message.charCodeAt(k) ^ keystream;
+                result += String.fromCharCode(encryptedChar);
+            }
+
+            return result;
+        }
+
+        function encrypt() {
+            var key = document.getElementById("key").value;
+            var message = document.getElementById("message").value;
+            var encryptedMessage = rc4(key, message);
+            document.getElementById("encryptedMessage").value = encryptedMessage;
+        }
+
+        function decrypt() {
+            var key = document.getElementById("key").value;
+            var encryptedMessage = document.getElementById("encryptedMessage").value;
+            var decryptedMessage = rc4(key, encryptedMessage);
+            document.getElementById("decryptedMessage").value = decryptedMessage;
+        }
+    </script>
+</body>
+</html>

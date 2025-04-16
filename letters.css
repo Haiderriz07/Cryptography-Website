@@ -1,0 +1,60 @@
+body {
+  font-family: 'Arial', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  background-image: url('Images/caesar2.jpg'); /* Specify the URL of your background image */
+  background-size: cover; /* Cover the entire background */
+  background-repeat: no-repeat; /* Do not repeat the background image */
+  background-position: center; /* Center the background image */
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+  
+  button:hover {
+    background-color: #fbd829;
+  }
+
+/* Q1 */
+h1 {
+  color: rgb(0, 251, 54);
+  font-weight: bold;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 38px;
+  position: absolute;
+   top: 15%;
+   left: 65%;
+   transform: translate(-110%,90%); 
+
+}
+
+button:hover {
+  color: rgb(0, 0, 0); /* Change color on hover */
+  background-color: rgba(156, 0, 0, 0.991); /* Example background color change */
+}
+
+label, button {
+  color: rgb(57, 255, 189);
+  font-weight: bold;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 24px;
+}
+
+#result {
+  color: rgb(174, 255, 149);
+  font-weight: bold;
+  font-size: 28px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+#letterDistributionChart {
+  display: block;
+  box-sizing: border-box;
+  height: 200px; /* Adjust height as needed */
+  width: 500px; /* Adjust width as needed */
+  /* Add any additional styling you want */
+  color: #fbd829;
+}
+
+
+
+  

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <title>AES Encryption and Decryption</title>
+</head>
+<body>
+  <h1>AES Encryption and Decryption</h1>
+
+  <label for="message">Message:</label>
+  <input type="text" id="message" value="">
+  <br>
+  <label for="key">Key:</label>
+  <input type="text" id="key" value="5Km$P#z8a^2v@9eG">
+  <p style="color:red; font-weight:bold;">Proceed with this option or generate your own secret key.</p>
+  
+  <br>
+  <button onclick="encryptAndDecrypt()">Encrypt and Decrypt</button>
+
+  <div id="output"></div>
+
+  <script>
+    // IV library
+    const IV = {
+      generateRandomIV: function() {
+        const ivLength = 16; // Length of IV in bytes (128 bits)
+        const ivBytes = new Uint8Array(ivLength);
+        crypto.getRandomValues(ivBytes);
+        return this.arrayBufferToHex(ivBytes);
+      },
+
+      arrayBufferToHex: function(buffer) {
+        const hexArray = Array.from(new Uint8Array(buffer))
+          .map(byte => byte.toString(16).padStart(2, '0'));
+        return hexArray.join('');
+      },
+
+      hexToUint8Array: function(hex) {
+        const hexArray = hex.match(/.{1,2}/g);
+        if (!hexArray) return new Uint8Array(0);
+        return new Uint8Array(hexArray.map(byte => parseInt(byte, 16)));
+      }
+    };
+
+    async function encryptAndDecrypt() {
+      const messageInput = document.getElementById('message');
+      const keyInput = document.getElementById('key');
+      const outputDiv = document.getElementById('output');
+
+      const message = messageInput.value;
+      const password = keyInput.value;
+
+      const messageBuffer = new TextEncoder().encode(message);
+
+      // Generate a key from the provided password using PBKDF2
+      const salt = IV.generateRandomIV();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(password),
+        'PBKDF2',
+        false,
+        ['deriveKey']
+      );
+
+      const derivedKey = await crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: IV.hexToUint8Array(salt),
+          iterations: 100000,
+          hash: 'SHA-256',
+        },
+        keyMaterial,
+        { name: 'AES-CBC', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+
+      // Generate a random Initialization Vector (IV) using crypto.getRandomValues()
+      const iv = IV.generateRandomIV();
+
+      // Encrypt the message
+      const encryptedData = await crypto.subtle.encrypt(
+        { name: 'AES-CBC', iv: IV.hexToUint8Array(iv) },
+        derivedKey,
+        messageBuffer
+      );
+
+      // Decrypt the encrypted data using the same IV
+      const decryptedData = await crypto.subtle.decrypt(
+        { name: 'AES-CBC', iv: IV.hexToUint8Array(iv) },
+        derivedKey,
+        encryptedData
+      );
+
+      // Convert the ArrayBuffer to string
+      const decryptedMessage = new TextDecoder().decode(decryptedData);
+
+      // Display the encrypted and decrypted messages
+      outputDiv.innerHTML = `
+        <p>Encrypted Message: ${IV.arrayBufferToHex(encryptedData)}</p>
+        <p>Decrypted Message: ${decryptedMessage}</p>
+        <p>IV Used: ${iv}</p>
+      `;
+    }
+  </script>
+</body>
+</html>

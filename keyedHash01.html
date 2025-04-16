@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <title>Keyed Hashing Algorithm</title>
+</head>
+<body>
+<h1>Keyed Hashing Algorithm</h1>
+<label for="messageInput">Message:</label>
+<input type="text" id="messageInput" placeholder="Enter message">
+<br>
+<label for="keyInput">Key:</label>
+<input type="text" id="keyInput" placeholder="Enter key">
+<br>
+<button onclick="generateHash()">Generate Hash</button>
+<div id="result"></div>
+
+<script>
+    async function generateHash() {
+        var message = document.getElementById("messageInput").value; // Get message from input
+        var key = document.getElementById("keyInput").value; // Get key from input
+
+        // Convert the key and message to Uint8Arrays
+        var keyBytes = new TextEncoder().encode(key);
+        var messageBytes = new TextEncoder().encode(message);
+
+        // Perform the HMAC-SHA256 hash
+        var hashBytes = await hmacSha256(keyBytes, messageBytes);
+
+        // Convert the hash bytes to a hex string
+        var hashHex = bytesToHex(hashBytes);
+
+        // Display the result
+        var resultElement = document.getElementById("result");
+        resultElement.innerHTML = "Hash: " + hashHex;
+    }
+
+    async function hmacSha256(key, message) {
+        var blockSize = 64; // HMAC block size (in bytes)
+        var hashSize = 32; // SHA-256 digest size (in bytes)
+
+        // Prepare the key
+        if (key.length > blockSize) {
+            key = await sha256(key);
+        } else if (key.length < blockSize) {
+            key = padKey(key);
+        }
+
+        // Compute inner padding and outer padding
+        var innerPadding = new Uint8Array(blockSize);
+        var outerPadding = new Uint8Array(blockSize);
+        for (var i = 0; i < blockSize; i++) {
+            innerPadding[i] = key[i] ^ 0x36;
+            outerPadding[i] = key[i] ^ 0x5C;
+        }
+
+        // Compute inner hash
+        var innerHash = new Uint8Array(innerPadding.length + message.length);
+        innerHash.set(innerPadding);
+        innerHash.set(message, innerPadding.length);
+        innerHash = await sha256(innerHash);
+
+        // Compute outer hash
+        var outerHash = new Uint8Array(outerPadding.length + hashSize);
+        outerHash.set(outerPadding);
+        outerHash.set(innerHash, outerPadding.length);
+        outerHash = await sha256(outerHash);
+
+        return outerHash;
+    }
+
+    function padKey(key) {
+        var paddedKey = new Uint8Array(64);
+        paddedKey.set(key);
+        return paddedKey;
+    }
+
+    async function sha256(message) {
+        var hashBuffer = await crypto.subtle.digest("SHA-256", message);
+        var hashArray = Array.from(new Uint8Array(hashBuffer));
+        return new Uint8Array(hashArray);
+    }
+
+    function bytesToHex(bytes) {
+        var hexBytes = [];
+        for (var i = 0; i < bytes.length; i++) {
+            var hex = bytes[i].toString(16);
+            if (hex.length === 1) {
+                hex = "0" + hex;
+            }
+            hexBytes.push(hex);
+        }
+        return hexBytes.join("");
+    }
+</script>
+</body>
+</html>

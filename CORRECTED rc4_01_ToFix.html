@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>RC4 Encryption/Decryption</title>
+    <script>
+        function rc4(key, message) {
+            var S = [];
+            var keyLength = key.length;
+            
+            for (var i = 0; i < 256; i++) {
+                S[i] = i;
+            }
+            
+            var j = 0;
+            for (var i = 0; i < 256; i++) {
+                j = (j + S[i] + key.charCodeAt(i % keyLength)) % 256;
+                var temp = S[i];
+                S[i] = S[j];
+                S[j] = temp;
+            }
+            
+            var i = 0;
+            var j = 0;
+            var res = "";
+            for (var k = 0; k < message.length; k++) {
+                i = (i + 1) % 256;
+                j = (j + S[i]) % 256;
+                var temp = S[i];
+                S[i] = S[j];
+                S[j] = temp;
+                var keyStreamByte = S[(S[i] + S[j]) % 256];
+                var encryptedByte = message.charCodeAt(k) ^ keyStreamByte;
+                res += String.fromCharCode(encryptedByte);
+            }
+            
+            return res;
+        }
+        
+        function encrypt() {
+            const key = document.getElementById('key').value;
+            const message = document.getElementById('message').value;
+            const encrypted = rc4(key, message);
+            document.getElementById('encrypted').innerHTML = "Encrypted Result: " + encrypted;
+            const decrypted = rc4(key, encrypted);
+            document.getElementById('decrypted').innerHTML = "Decrypted Result: " + decrypted;
+        }
+    </script>
+</head>
+<body>
+    <h1>RC4 Encryption/Decryption</h1>
+    <label for="key">Key:</label>
+    <input type="text" id="key" name="key"><br><br>
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message"><br><br>
+    <button onclick="encrypt()">Encrypt/Decrypt</button><br><br>
+    <p id="encrypted"></p>
+    <p id="decrypted"></p>
+    <p>For illustrative purposes only, let's use the following key: <strong>7F3A9E5D2B8C041FF6D7321E9A4B5CDA</strong></p>
+    
+    <p style="color:red;"><strong>Please remember that this key is only being used for demonstration purposes and should not be employed for any actual security-related tasks.</strong></p>
+</body>
+</html>
+
+
+

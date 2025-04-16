@@ -1,0 +1,411 @@
+/* style.css */
+
+/* Resetting default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+        font-family: "Notable", sans-serif;      
+}
+
+/* Header styling */
+.header {
+    min-height: 110vh;
+    width: 110%;
+    background-image: url(Images/vecteezy_abstract-dark-sci-fi-tunnel-with-green-light-seamless-loop_9435573\ \(1\).mov);
+    background-size: cover; /* Adjusts the background image size to cover the entire header */
+}
+ 
+    /* Fading logo */
+    .fade-logo {
+        opacity: 0.93;
+        position: fixed;
+        top: 18%;
+        left: 18%;
+        transform: translate(-160%, -75%);
+    }
+    
+nav{
+    display: block;
+    padding: 20% 30%;
+    justify-content: space-between;
+    align-items: center;
+    }
+nav img{
+    width: 140px;
+    height: auto;
+    text-align: center;
+}    
+.nav-links{
+    flex: 1;
+    text-align: center;
+}
+.nav-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+}
+.nav-links ul li a {
+    color: rgb(81, 255, 0);
+    font-size: larger;
+    font-weight: 100;
+    font-size: 19px;
+    text-decoration: none;
+    font-family: "Notable", sans-serif;
+    cursor: pointer;
+    transition: color 0.4s; /* Added transition for color change */
+    position: relative; /* Added position relative */
+}
+
+.nav-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px; /* Added height for the underline effect */
+    background-color: transparent; /* Set initial background color to transparent */
+    position: absolute; /* Added position absolute */
+    bottom: 0; /* Set bottom to 0 to align with the bottom of the link */
+    left: 0; /* Set left to 0 to align with the beginning of the link */
+    transition: width 0.5s, background-color 0.5s; /* Added transition for width and background-color */
+}
+    .nav-links ul li:hover::after {
+        
+        position: absolute; /* Position the full text box absolutely */
+        background-color: rgba(0, 0, 0, 0.8); /* Background color of the full text box */
+        color: white; /* Text color of the full text box */
+        padding: 3px; /* Padding for the full text box */
+        border-radius: 2px; /* Border radius for the full text box */
+        width: 100px; /* Width of the full text box */
+        top: 100%; /* Position the full text box below the list item */
+        left: 20%; /* Position the full text box at the center horizontally */
+        transform: translateX(10%); /* Adjust position to center horizontally */
+        z-index: 500; /* Set z-index to ensure the full text box is on top of other elements */
+    }
+    
+    .nav-links ul li:hover::after {
+        width: 70%;
+        background-color: rgb(255, 0, 0); /* Changed color property to background-color */
+        transform: scale(1.0); /* Scale the element on hover */
+    }
+    
+.text-box{
+   width: 80%;
+   color: rgb(255, 98, 0); 
+   position: absolute;
+   top: 15%;
+   left: 65%;
+   transform: translate(-40%,-10%);  
+}
+.text-box h1{
+    font-size: 36px;
+    color: rgb(255, 247, 0);
+    
+}
+.footer{
+    color: rgb(255, 255, 255);
+    font-size: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    transform:  translate(185%, 300%);
+}
+
+/* CSS for Week 13 */
+.week13-text-box {
+    width: 80%;
+    position: absolute;
+    top: 15%;
+    left: 65%;
+    color: rgb(0, 255, 13);
+    transform: translate(-40%,-10%); 
+}
+.week13-text-box h1 {
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(30, 255, 0);
+}
+
+/* CSS for Week 13 Home button */
+.week13-main-page {
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+    color: rgb(0, 0, 0); /* Change text color to red */
+    font-weight: bolder; /* Make text bold */
+    text-decoration: double;
+    position: absolute;
+    top: 10%;
+    left: 80%;
+    transform: translate(-330%, 1600%);
+
+    
+}
+/* Questions Week 13 Positioning*/
+.week13-main-page:hover {
+    color: rgb(32, 255, 39); /* Change text color to red on hover */
+}
+.Week13-links {
+    position: relative; /* or absolute, fixed, etc. depending on your layout needs */
+    top: 20px; /* adjust the top position */
+    left: 50px; /* adjust the left position */
+    transform: translate(-30%,400%);/* You can also use right and bottom properties if needed */
+}
+
+.Week13-links{
+    flex: 1;
+    text-align: center;
+}
+.Week13-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+.Week13-links ul li a {
+    color: rgb(255, 255, 255);
+    font-size: larger;
+    font-weight: 100;
+    font-size: 25px;
+    text-decoration: none;
+    font-family: "Notable", sans-serif;
+    cursor: pointer;
+    font-style: bold;
+    transition: color 0.4s; /* Added transition for color change */
+    position: relative; /* Added position relative */
+}
+.Week13-links ul li a:hover {
+    color: rgb(255, 0, 0); /* Change text color to red on hover */
+    transform: scale(1.1); /* Scale the element on hover */
+}
+/* CSS for Week 14 */
+.week14-text-box {
+    width: 80%;
+    position: absolute;
+    top: 15%;
+    left: 65%;
+    color: rgb(255, 255, 255);
+    transform: translate(-40%,-10%); 
+}
+.week14-text-box h1 {
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(255, 245, 159);
+}
+
+.week14-main-page {
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+    color: rgb(0, 0, 0); /* Change text color to red */
+    font-weight: bolder; /* Make text bold */
+    text-decoration: double;
+    position: absolute;
+    top: 10%;
+    left: 80%;
+    transform: translate(-330%, 1600%);
+
+    
+}
+/* Questions Week 14 Positioning*/
+.week14-main-page:hover {
+    color: rgb(0, 255, 38); /* Change text color to red on hover */
+}
+.Week14-links {
+    position: relative; /* or absolute, fixed, etc. depending on your layout needs */
+    top: 20px; /* adjust the top position */
+    left: 50px; /* adjust the left position */
+    transform: translate(-30%,400%);/* You can also use right and bottom properties if needed */
+}
+
+.Week14-links{
+    flex: 1;
+    text-align: center;
+}
+.Week14-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+.Week14-links ul li a {
+    color: rgb(255, 255, 255);
+    font-size: larger;
+    font-weight: 100;
+    font-size: 25px;
+    text-decoration: none;
+    font-family: "Notable", sans-serif; 
+    cursor: pointer;
+    transition: color 0.4s; /* Added transition for color change */
+    position: relative; /* Added position relative */
+}
+.Week14-links ul li a:hover {
+    color: rgb(212, 0, 0); /* Change text color to red on hover */
+    transform: scale(1.1); /* Scale the element on hover */
+}
+
+/* CSS for Week 15 */
+.week15-text-box {
+    width: 80%;
+    position: absolute;
+    top: 15%;
+    left: 65%;
+    color: rgb(255, 255, 255);
+    transform: translate(-40%,-10%); 
+}
+.week15-text-box h1 {
+    font-size: 40px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* CSS for Week 13 Home button */
+.week15-main-page {
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+    color: rgb(0, 0, 0); /* Change text color to red */
+    font-weight: bolder; /* Make text bold */
+    text-decoration: double;
+    position: absolute;
+    top: 10%;
+    left: 80%;
+    transform: translate(-330%, 1600%);
+}
+
+/* Questions Week 13 Positioning*/
+.week15-main-page:hover {
+    color: rgb(255, 0, 0); /* Change text color to red on hover */
+}
+.week15-links {
+    position: relative; /* or absolute, fixed, etc. depending on your layout needs */
+    top: 20px; /* adjust the top position */
+    left: 50px; /* adjust the left position */
+    transform: translate(-30%,400%);/* You can also use right and bottom properties if needed */
+}
+
+.week15-links{
+    flex: 1;
+    text-align: center;
+}
+.week15-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+.week15-links ul li a {
+    color: rgb(246, 255, 0);
+    font-size: larger;
+    font-weight: 100;
+    font-size: 25px;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    cursor: pointer;
+    transition: color 0.4s; /* Added transition for color change */
+    position: relative; /* Added position relative */
+}
+.week15-links ul li a:hover {
+    color: rgb(212, 0, 0); /* Change text color to red on hover */
+    transform: scale(1.1); /* Scale the element on hover */
+}
+
+/* RSA File storage css edit */
+/* Add CSS styles for buttons */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* Add CSS styles for text input */
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+/* Add CSS styles for text area */
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    margin: 8px 0;
+}
+
+nav button {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+/* Hover effect */
+nav button:hover {
+    background-color: #560000; /* Darker green */
+}
+
+/* Add CSS styles for transparent box */
+.transparent-box {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+}
+
+/* Add CSS styles for center-aligned text */
+.center-text {
+    text-align: center;
+}
+
+/* Add CSS styles for button container */
+.button-container {
+    margin-top: 10px;
+    text-align: center;
+}
+body {
+    background-image: url('Images/vecteezy.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.header {
+    font-family: Arial, sans-serif; /* Change the font family */
+    font-size: 24px; /* Change the font size */
+    font-weight: bold; /* Change the font weight */
+    /* Add any other font styles as needed */
+}
+
+/* .week-main-page-buttons */
+.week-main-page {
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif ;
+    color: rgb(0, 0, 0); /* Change text color to red */
+    font-weight: bolder; /* Make text bold */
+    text-decoration: double;
+    position: absolute;
+    top: 15%;
+    left: 80%;
+    transform: translate(-330%, 1600%);
+}
+
+.week-main-page:hover {
+    color: rgb(0, 255, 76); /* Change text color to red on hover */
+}
+
+/* week-text-box for all buttons in weeks */
+.week-text-box {
+    width: 80%;
+    position: absolute;
+    top: 15%;
+    left: 65%;
+    color: rgb(255, 255, 255);
+    transform: translate(-40%,-10%); 
+}
+.week-text-box h1 {
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(77, 255, 0);
+}

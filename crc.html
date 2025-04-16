@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <title>CRC Calculation</title>
+</head>
+<body>
+  <h1>CRC Calculation</h1>
+  <label for="messageInput">Enter a message:</label>
+  <input type="text" id="messageInput" />
+  <button id="calculateMessageCRC">Calculate CRC for Message</button>
+  <br><br>
+  <input type="file" id="fileInput" />
+  <button id="calculateFileCRC">Calculate CRC for File</button>
+  <br><br>
+  <div id="messageResult"></div>
+  <div id="fileResult"></div>
+  <script>
+    // CRC-32 table
+    const crcTable = new Uint32Array(256);
+
+    // Initialize CRC-32 table
+    for (let i = 0; i < 256; i++) {
+      let crc = i;
+      for (let j = 0; j < 8; j++) {
+        crc = (crc & 1) ? (crc >>> 1) ^ 0xEDB88320 : crc >>> 1;
+      }
+      crcTable[i] = crc;
+    }
+
+    // Calculate CRC-32 for a message (string)
+    function calculateCRC32ForMessage(message) {
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < message.length; i++) {
+        const byte = message.charCodeAt(i) & 0xFF;
+        crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 0xFF];
+      }
+      return (crc ^ 0xFFFFFFFF).toString(16).toUpperCase();
+    }
+
+    // Calculate CRC-32 for a file (using FileReader)
+    function calculateCRC32ForFile(file, callback) {
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        const buffer = new Uint8Array(reader.result);
+        let crc = 0xFFFFFFFF;
+
+        for (let i = 0; i < buffer.length; i++) {
+          const byte = buffer[i];
+          crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 0xFF];
+        }
+
+        const crcResult = (crc ^ 0xFFFFFFFF).toString(16).toUpperCase();
+        callback(crcResult);
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Handle button click to calculate CRC for message
+    document.getElementById("calculateMessageCRC").addEventListener("click", function () {
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value;
+      const messageResult = document.getElementById("messageResult");
+      const crc = calculateCRC32ForMessage(message);
+      messageResult.innerHTML = `CRC-32 for message: ${crc}`;
+    });
+
+    // Handle button click to calculate CRC for file
+    document.getElementById("calculateFileCRC").addEventListener("click", function () {
+      const fileInput = document.getElementById("fileInput");
+      const fileResult = document.getElementById("fileResult");
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        calculateCRC32ForFile(file, function (crcResult) {
+          fileResult.innerHTML = `CRC-32 for file: ${crcResult}`;
+        });
+      } else {
+        fileResult.innerHTML = "Please select a file.";
+      }
+    });
+  </script>
+</body>
+</html>

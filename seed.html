@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <title>Random Number Generators</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+</head>
+<body>
+
+<script>
+  // Cyclic random number generator
+  function cyclicRandom(maxValue, period) {
+    let currentSeed = Math.floor(Math.random() * maxValue);
+    return function() {
+      currentSeed = (currentSeed + 1) % period;
+      return (currentSeed / period) * maxValue;
+    };
+  }
+
+  // Unpredictable random number generator using Math.random()
+  function unpredictableRandom(maxValue) {
+    return function() {
+      return Math.random() * maxValue;
+    };
+  }
+
+  // Deterministic random number generator using seedrandom
+  function deterministicRandom(maxValue, seed) {
+    const rng = new Math.seedrandom(seed);
+    return function() {
+      return rng() * maxValue;
+    };
+  }
+
+  // Generate random numbers
+  const maxValue = 100;
+  const period = 10;
+  const seed = 'yourSeedHere'; // Replace with an actual seed for reproducibility
+
+  const labels = Array.from({ length: 50 }, (_, i) => i + 1);
+  const cyclicRandomData = labels.map(() => cyclicRandom(maxValue, period)());
+  const unpredictableRandomData = labels.map(() => unpredictableRandom(maxValue)());
+  const deterministicRandomData = labels.map(() => deterministicRandom(maxValue, seed)());
+
+  // Plotting the output (using Chart.js)
+  const ctx = document.createElement('canvas').getContext('2d');
+  document.body.appendChild(ctx.canvas);
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Cyclic Random',
+          data: cyclicRandomData,
+          borderColor: 'red',
+          backgroundColor: 'lime',
+          fill: false,
+        },
+        {
+          label: 'Unpredictable Random',
+          data: unpredictableRandomData,
+          borderColor: 'black',
+          backgroundColor: 'lime',
+          fill: false,
+        },
+        {
+          label: 'Deterministic Random',
+          data: deterministicRandomData,
+          borderColor: 'yellow',
+          backgroundColor: 'lime',
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+        },
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+</script>
+
+</body>
+</html>

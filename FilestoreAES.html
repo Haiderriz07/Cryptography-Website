@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES-256-bit File Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <style>
+            #rsaStatus {
+                color: white;
+                font-weight: bold;
+                font-size: 24px;
+            }
+        </style>
+    
+    <!-- RSA Key Pair Generation Section -->
+    <button onclick="generateKeyPair()">Generate RSA Key Pair</button>
+    <p id="rsaStatus"></p>
+    
+    <!-- Message Encryption Section -->
+    <div class="button-container">
+        <input type="text" id="rsaMessage" placeholder="Type a message">
+        <button onclick="rsaEncryptMessage()">Encrypt with RSA</button>
+        <button onclick="rsaDecryptMessage()">Decrypt with RSA</button>
+    </div>
+    
+    <!-- Display Encrypted and Decrypted Messages -->
+    <textarea id="encryptedMessage" placeholder="Encrypted message will appear here" readonly></textarea>
+    <textarea id="decryptedMessage" placeholder="Decrypted message will appear here" readonly></textarea>
+    
+    <div class="transparent-box">
+        <p class="center-text">Upload file to Encrypt or Decrypt</p>
+        <!-- File Upload and All Labs Section -->
+        <div class="button-container">
+            <input type="file" id="fileInput" style="display:none;"">
+            <button onclick="document.getElementById('fileInput').click();">Upload a File</button>
+        </div>
+        <div class="button-container">
+            <button onclick="generateAESkeypair()">AES Key</button>
+            <button onclick="aesEncryptFile()">Encrypt</button>
+            <button onclick="aesDecryptFile()">Decrypt</button>
+        </div>
+
+    </div>
+
+    <script>
+        let publicKey, privateKey;
+
+        // Function to generate an RSA key pair
+        function generateKeyPair() {
+            window.crypto.subtle.generateKey(
+                {
+                    name: "RSA-OAEP",
+                    modulusLength: 2048,
+                    publicExponent: new Uint8Array([1, 0, 1]),
+                    hash: {name: "SHA-256"}
+                },
+                true,
+                ["encrypt", "decrypt"]
+            )
+            .then(function(keyPair){
+                publicKey = keyPair.publicKey;
+                privateKey = keyPair.privateKey;
+                document.getElementById('rsaStatus').innerText = 'RSA Key Pair Generated';
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('rsaStatus').innerText = 'Error Generating RSA Key Pair';
+            });
+        }
+
+        // Function to encrypt the message using RSA
+        function rsaEncryptMessage() {
+            let message = document.getElementById('rsaMessage').value;
+            let enc = new TextEncoder();
+            window.crypto.subtle.encrypt(
+                {
+                    name: "RSA-OAEP"
+                },
+                publicKey,
+                enc.encode(message)
+            )
+            .then(function(encrypted){
+                document.getElementById('encryptedMessage').value = btoa(String.fromCharCode.apply(null, new Uint8Array(encrypted)));
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('rsaStatus').innerText = 'Error Encrypting Message with RSA';
+            });
+        }
+
+        // Function to decrypt the message using RSA
+        function rsaDecryptMessage() {
+            let encrypted = document.getElementById('encryptedMessage').value;
+            let encryptedData = new Uint8Array(atob(encrypted).split('').map(char => char.charCodeAt(0)));
+            window.crypto.subtle.decrypt(
+                {
+                    name: "RSA-OAEP"
+                },
+                privateKey,
+                encryptedData
+            )
+            .then(function(decrypted){
+                let dec = new TextDecoder();
+                document.getElementById('decryptedMessage').value = dec.decode(decrypted);
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('rsaStatus').innerText = 'Error Decrypting Message with RSA';
+            });
+        }
+        let aesKey;
+
+// Function to generate an AES key
+function generateAESkeypair() {
+    window.crypto.subtle.generateKey(
+        {
+            name: "AES-GCM",
+            length: 256, // Can be 128, 192, or 256
+        },
+        true, // whether the key is extractable (i.e., can be used in exportKey)
+        ["encrypt", "decrypt"] // can "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+    )
+    .then(function(key){
+        aesKey = key;
+        alert('AES Key Generated');
+        //document.getElementById('AESStatus').innerText = 'AES Key Pair Generated';
+    })
+    .catch(function(err){
+        console.error(err);
+    });
+}
+
+// Function to encrypt a file with AES
+// Function to encrypt a file with AES and download the encrypted file
+// Function to encrypt a file with AES and download the encrypted file
+function aesEncryptFile() {
+    const fileInput = document.getElementById('fileInput');
+    if(fileInput.files.length == 0) {
+        alert('Please select a file.');
+        return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function() {
+        const arrayBuffer = this.result;
+        const iv = window.crypto.getRandomValues(new Uint8Array(12)); // Initialization vector
+        window.crypto.subtle.encrypt(
+            {
+                name: "AES-GCM",
+                iv: iv,
+            },
+            aesKey,
+            arrayBuffer
+        )
+        .then(function(encrypted){
+            // Combine the IV with the encrypted file because the IV is needed for decryption
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv, 0); // Set IV at the beginning
+            combined.set(new Uint8Array(encrypted), iv.length); // Then set the encrypted data
+            
+            // Create a Blob from the combined IV and encrypted data
+            const blob = new Blob([combined], {type: "application/octet-stream"});
+            
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create an anchor tag and force a download
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = "encrypted_file"; // Suggest a filename for the download
+            document.body.appendChild(a); // Append the anchor to the document
+            a.click(); // Simulate a click on the anchor
+            window.URL.revokeObjectURL(url); // Clean up the URL object
+            
+            // Optionally, display a base64-encoded string of the combined IV and encrypted data
+            // in the 'encryptedMessage' textarea for reference or additional use
+            const base64Encrypted = btoa(String.fromCharCode.apply(null, combined));
+            document.getElementById('encryptedMessage').value = base64Encrypted;
+        })
+        .catch(function(err){
+            console.error(err);
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+
+
+// Function to decrypt a file with AES
+function aesDecryptFile() {
+    const encryptedData = atob(document.getElementById('encryptedMessage').value);
+    const iv = encryptedData.slice(0, 12).split('').map(char => char.charCodeAt(0));
+    const encrypted = new Uint8Array(encryptedData.slice(12).split('').map(char => char.charCodeAt(0)));
+    window.crypto.subtle.decrypt(
+        {
+            name: "AES-GCM",
+            iv: new Uint8Array(iv),
+        },
+        aesKey,
+        encrypted
+    )
+    .then(function(decrypted){
+        // Here you should handle the decrypted file. For example, you can create a Blob and then download it
+        const blob = new Blob([decrypted], {type: "application/octet-stream"});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "decrypted_file"; // You can set a specific file name here
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(function(err){
+        console.error(err);
+    });
+}
+        
+    </script>
+</body>
+</html>

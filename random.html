@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <title>Random Number Generators</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css"
+</head>
+<body>
+
+<script>
+  // Function to generate random numbers with a cyclic sequence
+  function cyclicRandom() {
+    const maxValue = 100;
+    const period = 10; // Adjust the period as needed
+
+    let currentSeed = Math.floor(Math.random() * maxValue);
+    return function() {
+      currentSeed = (currentSeed + 1) % period;
+      return (currentSeed / period) * maxValue;
+    };
+  }
+
+  // Standard Math.random()
+  const mathRandom = Math.random;
+
+  // Cyclic random number generator
+  const cyclicGenerator = cyclicRandom();
+
+  // Unpredictable random number generator
+  const unpredictableGenerator = function() {
+    return Math.random() * 100;
+  };
+
+  // Generate random numbers
+  const labels = Array.from({ length: 50 }, (_, i) => i + 1); // Generate labels for 50 data points
+  const mathRandomData = labels.map(() => mathRandom() * 100);
+  const cyclicGeneratorData = labels.map(() => cyclicGenerator());
+  const unpredictableGeneratorData = labels.map(() => unpredictableGenerator());
+
+  // Plotting the output (using Chart.js)
+  const ctx = document.createElement('canvas').getContext('2d');
+  document.body.appendChild(ctx.canvas);
+
+  new Chart(ctx, {
+    type: 'line', // Use a line chart instead of scatter plot
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Math.random()',
+          data: mathRandomData,
+          borderColor: 'red',
+          backgroundColor: 'lime',
+          fill: false, // Do not fill the area under the line
+        },
+        {
+          label: 'Cyclic Generator',
+          data: cyclicGeneratorData,
+          borderColor: 'black',
+          backgroundColor: 'lime',
+          fill: false,
+        },
+        {
+          label: 'Unpredictable Generator',
+          data: unpredictableGeneratorData,
+          borderColor: 'yellow',
+          backgroundColor: 'lime',
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+        },
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+</script>
+
+</body>
+</html>

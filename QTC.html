@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Title -->
+  <title>Quadratic Time Complexity</title>
+  
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Heading -->
+  <h1>Quadratic Time Complexity</h1>
+  
+  <!-- Input field and button for user input -->
+  <label for="inputN">Enter a value for 'n':</label>
+  <input type="number" id="inputN" value="10">
+  <button onclick="calculate()">Calculate</button>
+  
+  <!-- Result display -->
+  <p id="result"></p>
+  
+  <!-- Canvas for chart -->
+  <canvas id="myChart" width="400" height="400"></canvas>
+
+  <!-- JavaScript code -->
+  <script>
+    // Function to calculate quadratic time complexity
+    function quadraticTime(n) {
+      let count = 0;
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          count += 1;
+        }
+      }
+      return count;
+    }
+
+    // Function to handle user input and generate chart
+    function calculate() {
+      // Get the value of 'n' from user input
+      const n = parseInt(document.getElementById('inputN').value);
+      
+      // Calculate quadratic time complexity for the given 'n'
+      const result = quadraticTime(n);
+      
+      // Display the result
+      document.getElementById('result').innerText = "Quadratic time complexity: " + result;
+
+      // Create data for the chart
+      const data = {
+        labels: Array.from({ length: n }, (_, i) => i + 1),
+        datasets: [{
+          label: 'Quadratic Time Complexity',
+          data: Array.from({ length: n }, (_, i) => quadraticTime(i + 1)),
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      };
+
+      // Chart configuration
+      const config = {
+        type: 'line',
+        data: data,
+      };
+
+      // Render the chart
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    }
+  </script>
+</body>
+</html>

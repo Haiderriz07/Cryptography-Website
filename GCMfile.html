@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCM File Encryption</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Include CryptoJS library for AES encryption/decryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <h1 class="header">GCM File Encryption</h1>
+
+    <!-- File input for selecting a file -->
+    <div class="input-container">
+        <label class="custom-label" for="fileInput">Choose a File:</label><br>
+        <input type="file" id="fileInput">
+    </div>
+
+    <!-- Input field for the encryption key -->
+    <div class="input-container">
+        <label class="custom-label" for="key">Encryption Key:</label><br>
+        <input type="text" id="key">
+    </div>
+
+    <!-- Input field for the Initialization Vector (IV) -->
+    <div class="input-container">
+        <label class="custom-label" for="iv">Initialization Vector (IV):</label><br>
+        <input type="text" id="iv">
+    </div>
+
+    <!-- Buttons for encrypting and decrypting the selected file -->
+    <div class="button-container">
+        <button onclick="encryptFile()">Encrypt File</button>
+        <button onclick="decryptFile()">Decrypt File</button>
+    </div>
+
+    <script>
+        // Function to encrypt the selected file
+        function encryptFile() {
+            var fileInput = document.getElementById('fileInput');
+            var key = document.getElementById('key').value;
+            var iv = document.getElementById('iv').value;
+
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            // Callback function when the file is loaded
+            reader.onload = function(event) {
+                var plaintext = event.target.result;
+                var ciphertext = encrypt(plaintext, key, iv);
+
+                // Creates a Blob from the ciphertext
+                var encryptedBlob = new Blob([ciphertext], { type: 'application/octet-stream' });
+                var encryptedUrl = URL.createObjectURL(encryptedBlob);
+
+                // Triggers the download of the encrypted file
+                var link = document.createElement('a');
+                link.href = encryptedUrl;
+                link.download = file.name + '.encrypted';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // Read the file as binary string
+            reader.readAsBinaryString(file);
+        }
+
+        // Function to decrypt the selected file
+        function decryptFile() {
+            var fileInput = document.getElementById('fileInput');
+            var key = document.getElementById('key').value;
+            var iv = document.getElementById('iv').value;
+
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            // Callback function when the file is loaded
+            reader.onload = function(event) {
+                var ciphertext = event.target.result;
+                var plaintext = decrypt(ciphertext, key, iv);
+
+                // Creates a Blob from the plaintext
+                var decryptedBlob = new Blob([plaintext], { type: 'application/octet-stream' });
+                var decryptedUrl = URL.createObjectURL(decryptedBlob);
+
+                // Download styling
+                var link = document.createElement('a');
+                link.href = decryptedUrl;
+                link.download = file.name.replace('.encrypted', '');
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // Read the file as binary string
+            reader.readAsBinaryString(file);
+        }
+
+        // Function to encrypt using AES-GCM
+        function encrypt(plaintext, key, iv) {
+            var encrypted = CryptoJS.AES.encrypt(plaintext, key, { iv: iv });
+            return encrypted.toString();
+        }
+
+        // Function to decrypt using AES-GCM
+        function decrypt(ciphertext, key, iv) {
+            var decrypted = CryptoJS.AES.decrypt(ciphertext, key, { iv: iv });
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+    </script>
+</body>
+</html>

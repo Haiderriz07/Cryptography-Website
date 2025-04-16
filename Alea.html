@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Number Generators</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="alea.js"></script>
+</head>
+
+<body>
+  <canvas id="randomChart" width="400" height="200"></canvas>
+
+  <script>
+    // Function to generate random data points
+    function generateRandomData(generator, count) {
+      const data = [];
+      for (let i = 0; i < count; i++) {
+        data.push(generator());
+      }
+      return data;
+    }
+
+    // Alea PRNG
+    const aleaGenerator = new Alea();
+
+    // Standard JavaScript PRNG
+    function standardRandomGenerator() {
+      return Math.random();
+    }
+
+    // Cyclic number sequence (simple linear congruential generator)
+    const cyclicGenerator = (function () {
+      let seed = 42;
+      return function () {
+        const a = 1664525;
+        const c = 1013904223;
+        seed = (a * seed + c) & 0xFFFFFFFF;
+        return seed / 0xFFFFFFFF;
+      };
+    })();
+
+    // Generate random data
+    const dataPoints = 100;
+    const aleaData = generateRandomData(aleaGenerator, dataPoints);
+    const standardRandomData = generateRandomData(standardRandomGenerator, dataPoints);
+    const cyclicData = generateRandomData(cyclicGenerator, dataPoints);
+
+    // Plot the data using Chart.js
+    const ctx = document.getElementById('randomChart').getContext('2d');
+    const randomChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: Array.from({ length: dataPoints }, (_, i) => i + 1),
+        datasets: [{
+            label: 'Alea',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            data: aleaData,
+          },
+          {
+            label: 'Standard Random',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: standardRandomData,
+          },
+          {
+            label: 'Cyclic',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            data: cyclicData,
+          },
+        ],
+      },
+    });
+  </script>
+</body>
+
+</html>

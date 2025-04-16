@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> <!-- Character encoding declaration -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive viewport settings -->
+  <title>Exponential Time Complexity</title> <!-- Title of the HTML page -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js library -->
+</head>
+<body>
+  <h1>Exponential Time Complexity Calculation</h1> <!-- Heading of the page -->
+  <label for="inputN">Enter a value for 'n':</label> <!-- Label for input field -->
+  <input type="number" id="inputN" value="3"> <!-- Input field for 'n' -->
+  <button onclick="calculate()">Calculate</button> <!-- Button to trigger the calculation -->
+  <p id="result" style="color: rgb(255, 6, 6); font-weight: bold;"></p> <!-- Paragraph to display the result -->
+  <p id="errorMessage" style="color: red; font-weight: bold; display: none;">Please enter a non-negative integer.</p> <!-- Error message paragraph, initially hidden -->
+  <canvas id="myChart" width="400" height="200"></canvas> <!-- Canvas element for the chart -->
+  
+  <script>
+    // JavaScript code
+    
+    // Function to calculate exponential time complexity
+    function exponentialTime(n) {
+      if (n === 0) {
+        return 1;
+      } else {
+        return 2 * exponentialTime(n - 1);
+      }
+    }
+
+    // Function to handle calculation button click
+    function calculate() {
+      const n = parseInt(document.getElementById('inputN').value);
+      if (isNaN(n) || n < 0 || !Number.isInteger(n)) {
+        document.getElementById('errorMessage').style.display = 'block'; // Show error message if input is invalid
+        document.getElementById('result').innerText = ''; // Clear result paragraph
+      } else {
+        const result = exponentialTime(n);
+        document.getElementById('errorMessage').style.display = 'none'; // Hide error message if input is valid
+        document.getElementById('result').innerText = "Exponential time complexity: " + result; // Display result
+        updateChart(n, result); // Update the chart with the result
+      }
+    }
+
+    // Function to update the chart
+    function updateChart(n, result) {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'bar', // Chart type
+        data: {
+          labels: ['n'], // X-axis label
+          datasets: [{
+            label: 'Exponential Time Complexity', // Dataset label
+            data: [result], // Dataset values
+            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Background color for bars
+            borderColor: 'rgba(255, 99, 132, 1)', // Border color for bars
+            borderWidth: 1 // Border width for bars
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true // Start y-axis from zero
+              }
+            }]
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

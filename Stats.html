@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function Profiling Stats</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align: center;">
+    <h1>Function Profiling Stats</h1>
+
+    <table id="statsTable">
+      <!-- Table content will be dynamically populated by JavaScript -->
+    </table>
+
+    <canvas id="statsChart"></canvas>
+  </div>
+
+  <script>
+    // Profiling and data collection (replace with actual profiling logic)
+    const functionTimings = {};
+    function profileFunction(fnName, fn) {
+      const startTime = performance.now();
+      fn();
+      const endTime = performance.now();
+      functionTimings[fnName] = endTime - startTime;
+    }
+
+    // Sample functions (replace with your actual functions)
+    function function1() {
+      // Simulate some computation
+      for (let i = 0; i < 1000; i++) {
+        Math.random(); // Simulate a simple operation
+      }
+    }
+
+    function function2() {
+      // Simulate some other computation
+      for (let j = 0; j < 2000; j++) {
+        Math.random(); // Simulate a simple operation
+      }
+    }
+
+    // Profile functions (replace with actual profiling calls)
+    profileFunction("function1", function1);
+    profileFunction("function2", function2);
+
+    // Update function to create stats table (replace with actual menu integration)
+    function updateStatsTable() {
+      const table = document.getElementById("statsTable");
+      table.innerHTML = ""; // Clear existing content
+
+      const headerRow = document.createElement("tr");
+      const nameHeader = document.createElement("th");
+      nameHeader.textContent = "Function Name";
+      headerRow.appendChild(nameHeader);
+      const timeHeader = document.createElement("th");
+      timeHeader.textContent = "Execution Time (ms)";
+      headerRow.appendChild(timeHeader);
+      table.appendChild(headerRow);
+
+      for (const [name, time] of Object.entries(functionTimings)) {
+        const dataRow = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        nameCell.textContent = name;
+        dataRow.appendChild(nameCell);
+        const timeCell = document.createElement("td");
+        timeCell.textContent = time.toFixed(2); // Format time to two decimal places
+        dataRow.appendChild(timeCell);
+        table.appendChild(dataRow);
+      }
+
+      // Call function to draw chart
+      drawChart();
+    }
+
+    // Call update function to populate the table (replace with menu interaction)
+    updateStatsTable();
+
+    // Function to draw the chart
+    function drawChart() {
+      const canvas = document.getElementById("statsChart");
+      const ctx = canvas.getContext("2d");
+
+      const functionNames = Object.keys(functionTimings);
+      const executionTimes = Object.values(functionTimings);
+
+      canvas.width = 400;
+      canvas.height = 300;
+
+      const maxTime = Math.max(...executionTimes);
+      const barWidth = 50;
+      const chartHeight = canvas.height - 50;
+      const chartWidth = canvas.width - 100;
+      const gap = 50;
+
+      ctx.fillStyle = "#f1f1f1";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#000";
+      ctx.font = "14px Arial";
+
+      for (let i = 0; i < functionNames.length; i++) {
+        const x = gap + (gap + barWidth) * i;
+        const barHeight = (executionTimes[i] / maxTime) * chartHeight;
+        ctx.fillStyle = "pink"; // Change bar color to pink
+        ctx.fillRect(x, chartHeight - barHeight, barWidth, barHeight);
+        ctx.fillStyle = "#000";
+        ctx.fillText(functionNames[i], x, chartHeight + 20);
+        ctx.fillText(executionTimes[i].toFixed(2), x, chartHeight - barHeight - 5);
+      }
+
+      ctx.fillText("Function Name", chartWidth / 2, chartHeight + 40);
+      ctx.fillText("Execution Time (ms)", 10, 10);
+    }
+  </script>
+</body>
+</html>

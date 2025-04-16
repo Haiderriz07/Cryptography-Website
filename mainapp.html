@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+    <title>Hash and CRC-32 Calculator</title>
+</head>
+<body>
+    <h1>Hash and CRC-32 Calculator</h1>
+    <input type="text" id="inputText" placeholder="Enter text to hash">
+    <button onclick="performHashing()">Hash Text</button>
+    <p id="hashResult"></p>
+
+    <script>
+        async function performHashing() {
+            const inputText = document.getElementById('inputText').value;
+            if (window.crypto && window.crypto.subtle) {
+                // Perform SHA-256 hash
+                const msgBuffer = new TextEncoder().encode(inputText); // Encode as (utf-8) Uint8Array
+                const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer); // Hash the message
+                const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
+                const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join(''); // Convert bytes to hex string
+                document.getElementById('hashResult').innerHTML = `Original Data: ${inputText}<br>Hashed Data (SHA-256): ${hashHex}`;
+            } else {
+                console.error("Crypto API not supported");
+            }
+
+            // Example CRC-32 Calculation (simplified and not accurate for demonstration only)
+            // For accurate CRC-32 calculation, use a proper CRC-32 library
+            const crcResult = simpleCRC32(inputText);
+            console.log(`CRC-32 for message: ${crcResult}`);
+        }
+
+        // Simple, inaccurate CRC-32 calculation for demonstration purposes
+        function simpleCRC32(str) {
+            let crc = 0; // Placeholder for CRC-32 algorithm
+            // Simple hashing-like function for demonstration (not a real CRC-32 calculation)
+            for (let i = 0; i < str.length; i++) {
+                crc += str.charCodeAt(i);
+            }
+            return crc % 0xFFFFFFFF;
+        }
+    </script>
+</body>
+</html>

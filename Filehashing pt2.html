@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <!-- Set the title of the HTML page -->
+    <link rel="stylesheet" href="styles.css">
+    <title>File Hashing and Encryption</title>
+    <!-- Include the CryptoJS library for hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <!-- Link to the external CSS file (styles.css) -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Heading for the page -->
+    <h1>File Hashing</h1>
+    <!-- Form for file input and key -->
+    <form id="fileForm">
+        <!-- Input element for selecting a file -->
+        <input type="file" id="fileInput" /><br><br>
+        <!-- Label and input for entering the encryption key -->
+        <label for="key">Key:</label><br>
+        <input type="text" id="key" /><br><br>
+        <!-- Button to trigger the file processing function -->
+        <input type="button" value="Generate" onclick="processFile()" />
+    </form>
+    <!-- Display area for the output (hash) -->
+    <div id="output"></div>
+
+    <!-- JavaScript code for processing the selected file -->
+    <script>
+        function processFile() {
+            // Get the file input element and the selected file
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            // Check if a file is selected
+            if (!file) {
+                alert('Please select a file.');
+                return;
+            }
+
+            // Create a FileReader to read the contents of the file
+            const reader = new FileReader();
+            
+            // Callback function triggered when file reading is complete
+            reader.onload = function(e) {
+                // Get the ArrayBuffer from the loaded file
+                const arrayBuffer = e.target.result;
+                
+                // Get the encryption key from the input field
+                const key = document.getElementById('key').value;
+                
+                // For demonstration, hashing the ArrayBuffer directly
+                // In practice, you would encrypt/decrypt here
+                const wordArray = CryptoJS.lib.WordArray.create(arrayBuffer);
+                const hash = CryptoJS.SHA256(wordArray);
+                
+                // Display the hash in the output div
+                document.getElementById('output').innerText = 'Hash: ' + hash;
+            };
+            
+            // Read the file as an ArrayBuffer
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+</body>
+</html>

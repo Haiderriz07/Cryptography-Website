@@ -1,0 +1,64 @@
+body {
+    background-image: url('Images/vecteezy_retro-style-80s-sci-fi-background-futuristic-with-laser-grid_6241215.jpg'); /* Replace 'your-image-url.jpg' with the URL of your image */
+    background-size: cover; /* Ensure the background image covers the entire body */
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+    background-position: center; /* Center the background image */
+    background-color: rgb(0, 21, 61); /* Fallback background color */
+    color: rgb(68, 225, 155);
+    font-family: "Arial", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column; /* Arrange elements vertically */
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+
+.container {
+    text-align: center;
+    padding: 20px;
+    display: inline-block;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 45px;
+}
+
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #e21717;
+    border-radius: 2px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+button {
+    background-color: red;
+    color: black;
+    font-size: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+}
+
+button:hover {
+    background-color: rgb(255, 253, 113);
+}

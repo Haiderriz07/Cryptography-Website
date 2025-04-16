@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Encryption and Decryption</title>
+    <!-- Linking to an external CSS file -->
+    <link rel="stylesheet" href="letters.css">
+</head>
+
+<body>
+    <!-- Heading for the page -->
+    <h1>Caesar Cipher Encryption and Decryption</h1>
+
+    <!-- Textarea for entering plaintext -->
+    <label for="plaintext">Enter Text:</label>
+    <textarea id="plaintext" rows="4" cols="50"></textarea>
+
+    <!-- Input for entering the shift value -->
+    <label for="shift">Enter Shift Value:</label>
+    <input type="number" id="shift" min="1" max="25" value="3">
+
+    <!-- Buttons for encryption and decryption -->
+    <button onclick="encrypt()">Encrypt</button>
+    <button onclick="decrypt()">Decrypt</button>
+
+    <!-- Heading for displaying the result -->
+    <h2>Result:</h2>
+    <p id="result"></p>
+
+    <!-- JavaScript code for encryption and decryption -->
+    <script>
+        // Function to perform Caesar Cipher encryption or decryption
+        function caesarCipher(text, shift, direction) {
+            let result = "";
+
+            // Adjust the shift direction based on the encryption or decryption
+            direction = direction === "decrypt" ? -shift : shift;
+
+            // Loop through each character in the text
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let isUpperCase = char === char.toUpperCase();
+                let offset = isUpperCase ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+
+                // Check if the character is a letter
+                if (char.match(/[a-zA-Z]/)) {
+                    // Calculate the shifted character
+                    let shiftedChar = String.fromCharCode((char.charCodeAt(0) - offset + direction + 26) % 26 + offset);
+                    result += shiftedChar;
+                } else if (char.match(/[0-9]/)) {
+                    // Encrypt/Decrypt numbers
+                    let num = parseInt(char);
+                    let shiftedNum = (num + direction + 10) % 10;
+                    result += shiftedNum.toString();
+                } else {
+                    // If the character is not a letter or a number, keep it unchanged
+                    result += char;
+                }
+            }
+
+            return result;
+        }
+
+        // Function to encrypt the plaintext
+        function encrypt() {
+            let plaintext = document.getElementById("plaintext").value;
+            let shift = parseInt(document.getElementById("shift").value);
+            let ciphertext = caesarCipher(plaintext, shift, "encrypt");
+            document.getElementById("result").innerText = "Ciphertext: " + ciphertext;
+        }
+
+        // Function to decrypt the ciphertext
+        function decrypt() {
+            // Extract ciphertext from the result paragraph
+            let ciphertext = document.getElementById("result").innerText.substring(11);
+            let shift = parseInt(document.getElementById("shift").value);
+            let decryptedText = caesarCipher(ciphertext, shift, "decrypt");
+            document.getElementById("result").innerText = "Decrypted Text: " + decryptedText;
+        }
+    </script>
+</body>
+</html>

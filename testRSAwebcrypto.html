@@ -1,0 +1,103 @@
+<!-- This HTML document is a simple RSA encryption/decryption test tool. -->
+
+<!--
+The following script defines functions to generate RSA key pairs, encrypt messages, and decrypt messages.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Linking an external CSS file for styling -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Title of the document -->
+    <title>RSA Encryption/Decryption Test</title>
+    <!-- JavaScript code for RSA encryption/decryption -->
+    <script>
+        // Variables to store public and private keys
+        let publicKey, privateKey;
+
+        // Function to generate an RSA key pair
+        function generateKeyPair() {
+            window.crypto.subtle.generateKey(
+                {
+                    name: "RSA-OAEP",
+                    modulusLength: 2048, // Can be 1024, 2048, or 4096
+                    publicExponent: new Uint8Array([1, 0, 1]),
+                    hash: {name: "SHA-256"}
+                },
+                true,
+                ["encrypt", "decrypt"]
+            )
+            .then(function(keyPair){
+                publicKey = keyPair.publicKey;
+                privateKey = keyPair.privateKey;
+                document.getElementById('status').innerText = 'Key Pair Generated';
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('status').innerText = 'Error Generating Key Pair';
+            });
+        }
+
+        // Function to encrypt the message
+        function encryptMessage() {
+            let message = document.getElementById('message').value;
+            let enc = new TextEncoder();
+            window.crypto.subtle.encrypt(
+                {
+                    name: "RSA-OAEP"
+                },
+                publicKey,
+                enc.encode(message)
+            )
+            .then(function(encrypted){
+                document.getElementById('encrypted').value = btoa(String.fromCharCode.apply(null, new Uint8Array(encrypted)));
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('status').innerText = 'Error Encrypting Message';
+            });
+        }
+
+        // Function to decrypt the message
+        function decryptMessage() {
+            let encrypted = document.getElementById('encrypted').value;
+            let encryptedData = new Uint8Array(atob(encrypted).split('').map(char => char.charCodeAt(0)));
+            window.crypto.subtle.decrypt(
+                {
+                    name: "RSA-OAEP"
+                },
+                privateKey,
+                encryptedData
+            )
+            .then(function(decrypted){
+                let dec = new TextDecoder();
+                document.getElementById('decrypted').value = dec.decode(decrypted);
+            })
+            .catch(function(err){
+                console.error(err);
+                document.getElementById('status').innerText = 'Error Decrypting Message';
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- Heading for the tool -->
+    <h1>RSA Encryption/Decryption Test</h1>
+    <!-- Button to generate RSA key pair -->
+    <button onclick="generateKeyPair()">Generate Key Pair</button>
+    <!-- Paragraph to display status messages -->
+    <p id="status"></p>
+
+    <!-- Text area to enter the message to be encrypted -->
+    <textarea id="message" placeholder="Enter message to encrypt"></textarea><br>
+    <!-- Button to trigger encryption -->
+    <button onclick="encryptMessage()">Encrypt Message</button><br>
+    <!-- Text area to display the encrypted message -->
+    <textarea id="encrypted" placeholder="Encrypted message will appear here" readonly></textarea><br>
+    <!-- Button to trigger decryption -->
+    <button onclick="decryptMessage()">Decrypt Message</button><br>
+    <!-- Text area to display the decrypted message -->
+    <textarea id="decrypted" placeholder="Decrypted message will appear here" readonly></textarea><br>
+</body>
+</html>

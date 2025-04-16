@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constant Time Complexity Example</title>
+  <!-- Add Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Constant Time Complexity Example</h1>
+  <p style="color: rgb(0, 11, 163);">Constant Time Complexity: 101</p>
+  <p style="color: red; font-weight: bold;">Or open the browser Console on Google Chrome or Firefox to see the result.</p>
+
+  <!-- Add canvas element for the chart -->
+  <canvas id="myChart" width="400" height="200"></canvas>
+
+  <script>
+    function constantTime(n) {
+      return n + 1;
+    }
+
+    // Example usage
+    const n = 100;
+    const result = constantTime(n);
+    console.log("Constant time complexity:", result);
+
+    // Chart.js code to create a simple bar chart
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Result'],
+        datasets: [{
+          label: 'Constant Time Complexity',
+          data: [result],
+          backgroundColor: 'rgb(0, 11, 163)',
+          borderColor: 'rgb(0, 11, 163)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Functions</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <canvas id="myChart" width="400" height="300"></canvas>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Define the functions
+        function constant(x) {
+            return 1;
+        }
+
+        function linear(x) {
+            return x;
+        }
+
+        function logarithmic(x) {
+            return Math.log(x);
+        }
+
+        function exponential(x) {
+            return Math.pow(2, x);
+        }
+
+        // Define the data
+        var x = [];
+        for (var i = 1; i <= 10; i++) {
+            x.push(i);
+        }
+
+        var constantData = x.map(constant);
+        var linearData = x.map(linear);
+        var logarithmicData = x.map(logarithmic);
+        var exponentialData = x.map(exponential);
+
+        // Create the chart
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: x,
+                datasets: [
+                    {
+                        label: 'Constant',
+                        data: constantData,
+                        borderColor: 'grey',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)'
+                    },
+                    {
+                        label: 'Linear',
+                        data: linearData,
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)'
+                    },
+                    {
+                        label: 'Logarithmic',
+                        data: logarithmicData,
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                    },
+                    {
+                        label: 'Exponential',
+                        data: exponentialData,
+                        borderColor: 'yellow',
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            min: 1,
+                            max: 10
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            max: 10
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

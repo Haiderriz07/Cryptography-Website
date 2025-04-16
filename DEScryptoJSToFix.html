@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Include external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Set the title of the page -->
+    <title>DES Encryption and Decryption</title>
+    <!-- Include CryptoJS library for DES encryption/decryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body>
+    <!-- Heading for the page -->
+    <h2>DES Encryption and Decryption</h2>
+
+    <!-- Input field for entering the message to encrypt/decrypt -->
+    <label for="message">Enter Message:</label><br>
+    <input type="text" id="message" name="message"><br><br>
+
+    <!-- Input field for entering the secret key -->
+    <label for="key">Enter Secret Key:</label><br>
+    <input type="text" id="key" name="key"><br><br>
+
+    <!-- Buttons to trigger encryption and decryption -->
+    <button onclick="encrypt()">Encrypt</button>
+    <button onclick="decrypt()">Decrypt</button>
+
+    <!-- Heading for displaying the encrypted message -->
+    <h3>Encrypted:</h3>
+    <!-- Paragraph element to display the encrypted message -->
+    <p id="encrypted"></p>
+
+    <!-- Heading for displaying the decrypted message -->
+    <h3>Decrypted:</h3>
+    <!-- Paragraph element to display the decrypted message -->
+    <p id="decrypted"></p>
+
+    <script>
+        // Function to encrypt the message
+        function encrypt() {
+            // Get the message and secret key from the input fields
+            var message = document.getElementById('message').value;
+            var secretKey = document.getElementById('key').value;
+
+            // Encrypt the message using DES encryption
+            var encrypted = CryptoJS.DES.encrypt(message, secretKey).toString();
+            // Display the encrypted message
+            document.getElementById('encrypted').innerText = encrypted;
+
+            // Clear the decrypted field
+            document.getElementById('decrypted').innerText = '';
+        }
+
+        // Function to decrypt the message
+        function decrypt() {
+            // Get the encrypted message and secret key from the input fields
+            var encryptedMessage = document.getElementById('encrypted').innerText;
+            var secretKey = document.getElementById('key').value;
+
+            try {
+                // Decrypt the message using DES decryption
+                var decryptedBytes = CryptoJS.DES.decrypt(encryptedMessage, secretKey);
+                // Convert the decrypted bytes to a UTF-8 string
+                var decrypted = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                // Display the decrypted message
+                document.getElementById('decrypted').innerText = decrypted;
+            } catch (error) {
+                // Display an error message if decryption fails
+                alert("Decryption failed. Make sure the key is correct.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter Distribution Tool</title>
+    <!-- Add the link to your external CSS file here -->
+  <link rel="stylesheet" href="letters.css"
+  ><!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div style="width: 20%; margin: auto; text-align: center;">
+    <label for="inputText" style="color: black; font-weight: bold; font-size: 24px; margin-top: 50px;">Feel free to Write anything in English</label>
+    <textarea id="inputText" rows="4" cols="30"></textarea>
+    <br>
+    <button onclick="analyzeText()">Analyze Text</button>
+</div>
+
+    <br>
+    <canvas id="letterDistributionChart"></canvas>
+  </div>
+
+  <script>
+    function analyzeText() {
+      const inputText = document.getElementById('inputText').value.toUpperCase();
+      const letterFrequencies = {};
+
+      // Count letter frequencies
+      for (let char of inputText) {
+        if (char.match(/[A-Z]/)) {
+          letterFrequencies[char] = (letterFrequencies[char] || 0) + 1;
+        }
+      }
+
+      // Create a bar graph using Chart.js
+      const labels = Object.keys(letterFrequencies);
+      const data = Object.values(letterFrequencies);
+
+      const ctx = document.getElementById('letterDistributionChart').getContext('2d');
+
+      if (window.myChart instanceof Chart) {
+        // If a chart already exists, destroy it before creating a new one
+        window.myChart.destroy();
+      }
+
+      window.myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Letter Distribution',
+            data: data,
+            backgroundColor: 'black',
+            borderColor: 'red',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

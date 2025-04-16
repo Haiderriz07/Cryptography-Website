@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCM Encryption Example</title>
+    <!-- Include CryptoJS library for AES encryption/decryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Link to the external CSS file for styling -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Galois Counter Mode (GCM) Encryption</h1>
+
+    <!-- Input for entering the plaintext -->
+    <div>
+        <label for="plaintext">Plaintext:</label><br>
+        <textarea id="plaintext" rows="4" cols="50"></textarea>
+    </div>
+
+    <!-- Input for entering the encryption key -->
+    <div>
+        <label for="key">Encryption Key:</label><br>
+        <input type="text" id="key">
+    </div>
+
+    <!-- Input for entering the initialization vector (IV) -->
+    <div>
+        <label for="iv">Initialization Vector (IV):</label><br>
+        <input type="text" id="iv">
+    </div>
+
+    <!-- Buttons for encryption and decryption -->
+    <div>
+        <button onclick="encryptMessage()">Encrypt</button>
+        <button onclick="decryptMessage()">Decrypt</button>
+    </div>
+
+    <!-- Display area for the ciphertext -->
+    <div>
+        <label for="ciphertext">Ciphertext:</label><br>
+        <textarea id="ciphertext" rows="4" cols="50"></textarea>
+    </div>
+
+    <!-- JavaScript code for encryption and decryption -->
+    <script>
+        // Function to encrypt the plaintext
+        function encryptMessage() {
+            var plaintext = document.getElementById('plaintext').value;
+            var key = document.getElementById('key').value;
+            var iv = document.getElementById('iv').value;
+
+            // Perform encryption using CryptoJS library
+            var encrypted = CryptoJS.AES.encrypt(plaintext, key, { iv: iv });
+            document.getElementById('ciphertext').value = encrypted.toString();
+        }
+
+        // Function to decrypt the ciphertext
+        function decryptMessage() {
+            var ciphertext = document.getElementById('ciphertext').value;
+            var key = document.getElementById('key').value;
+            var iv = document.getElementById('iv').value;
+
+            // Perform decryption using CryptoJS library
+            var decrypted = CryptoJS.AES.decrypt(ciphertext, key, { iv: iv });
+            var plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+            document.getElementById('plaintext').value = plaintext;
+        }
+    </script>
+</body>
+</html>
